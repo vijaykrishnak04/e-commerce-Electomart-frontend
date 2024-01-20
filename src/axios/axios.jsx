@@ -15,21 +15,27 @@ const axiosInstance = (tokenName) => {
         return request;
     });
 
-    // instance.interceptors.response.use(
-    //     (response) => response,
-    //     (error) => {
-    //         const errorResponse = error?.response;
-    //         if (errorResponse?.status === 401) {
-    //             console.log("Unauthorized error:", errorResponse?.data);
-    //         } else if (errorResponse.status === 404) {
-    //             console.log("Not found error:", errorResponse?.data);
-    //         } else {
-    //             console.log("Other error:", errorResponse?.data);
-    //         }
-    //         return Promise.reject(errorResponse?.data);
-    //     }
-    // );
+    instance.interceptors.response.use(
+        (response) => response,
+        async (error) => {
+            const originalRequest = error.config;
 
+            if (error.response.status === 401 && !originalRequest._retry) {
+                originalRequest._retry = true;
+                try {
+                    const refreshToken = localStorage.getItem("AdminRefreshToken");
+                    const response = await axios.post("/refresh-token", { refreshToken });
+
+                    localStorage.setItem(tokenName, response.data.accessToken);
+                    return axiosInstance(tokenName).request(originalRequest);
+                } catch (refreshError) {
+                    console.error("Error refreshing token:", refreshError);
+                }
+            }
+
+            return Promise.reject(error);
+        }
+    );
     return instance;
 };
 
