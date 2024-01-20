@@ -1,7 +1,8 @@
 import React from 'react'
 import { Route, Routes } from "react-router-dom";
-import AdminLogin from '../../pages/admin/AdminLogin';
+import AdminLoginPage from '../../pages/admin/AdminLoginPage';
 import NotFoundPage from '../../pages/NotFoundPage';
+import AdminDashboardPage from '../../pages/admin/AdminDashboardPage';
 
 
 
@@ -10,7 +11,8 @@ const AdminRoutes = () =>{
     return(
         <div>
             <Routes>
-                <Route path="/login" element={<AdminLogin/>}></Route>
+                <Route path="/login" element={<AdminLoginPage/>}></Route>
+                <Route path="/dashboard" element={<AdminDashboardPage/>}></Route>
 
 
 
