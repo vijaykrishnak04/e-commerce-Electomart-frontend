@@ -1,5 +1,9 @@
-import axiosInstance from "../axios/axios";
+import axios from "../axios/axios";
 
 export const loginApi = (values) => {
-    return axiosInstance('AdminAccessToken').post("admin/login",values);
+    return axios.post("admin/login",values);
 };
+
+export const testingApi = () => {
+    return axios.get('/admin/secure-route')
+}

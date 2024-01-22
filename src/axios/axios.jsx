@@ -1,42 +1,60 @@
 import axios from "axios";
+import { getAccessToken, getRefreshToken } from "../utils/token";
 
-const axiosInstance = (tokenName) => {
-    const instance = axios.create({
-        baseURL: import.meta.env.VITE_APP_SERVER_URL,
-        timeout: 5000,
-        headers: {
-            "Content-Type": "application/json",
-        },
-    });
+const instance = axios.create({
+    baseURL: import.meta.env.VITE_APP_SERVER_URL,
+    timeout: 5000,
+    headers: {
+        "Content-Type": "application/json",
+    },
+});
 
-    instance.interceptors.request.use((request) => {
-        const token = localStorage.getItem(tokenName);
-        request.headers.Authorization = `Bearer ${token}`;
-        return request;
-    });
-
-    instance.interceptors.response.use(
-        (response) => response,
-        async (error) => {
-            const originalRequest = error.config;
-
-            if (error.response.status === 401 && !originalRequest._retry) {
-                originalRequest._retry = true;
-                try {
-                    const refreshToken = localStorage.getItem("AdminRefreshToken");
-                    const response = await axios.post("/refresh-token", { refreshToken });
-
-                    localStorage.setItem(tokenName, response.data.accessToken);
-                    return axiosInstance(tokenName).request(originalRequest);
-                } catch (refreshError) {
-                    console.error("Error refreshing token:", refreshError);
-                }
-            }
-
-            return Promise.reject(error);
+instance.interceptors.request.use(
+    async (config) => {
+        const token = await getAccessToken();
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
         }
-    );
-    return instance;
+        return config;
+    },
+    (error) => {
+        return Promise.reject(error);
+    }
+);
+
+instance.interceptors.response.use(
+    (response) => response,
+    async (error) => {
+        const originalRequest = error.config;
+
+        if (error.response.status === 401 && !originalRequest._retry) {
+            originalRequest._retry = true;
+
+            try {
+                const newAccessToken = await refreshAccessToken();
+                originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+                return api(originalRequest);
+            } catch (refreshError) {
+                clearTokens();
+                console.log(refreshError);
+                throw refreshError;
+            }
+        }
+        return Promise.reject(error);
+    }
+);
+
+const refreshAccessToken = async () => {
+    try {
+        const refreshToken = getRefreshToken();
+        const response = await api.post("/admin/refresh-token", { refreshToken });
+        const { newAccessToken } = response.data;
+        saveTokens(newAccessToken);
+        return newAccessToken;
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
 };
 
-export default axiosInstance;
+export default instance;

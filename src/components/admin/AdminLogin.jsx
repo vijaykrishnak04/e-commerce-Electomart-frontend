@@ -7,10 +7,11 @@ import Logo from "../../assets/images/site-logo.png";
 import { IoPerson } from "react-icons/io5";
 import { GoEye, GoEyeClosed } from "react-icons/go";
 import { adminLoginValidationSchema } from "../../schema/admin/adminLoginValidaton";
-import { loginApi } from "../../services/adminServices";
+import { loginApi, testingApi } from "../../services/adminServices";
 import { useNavigate } from "react-router-dom";
 import { message } from 'antd'
-import axiosInstance from "../../axios/axios";
+import { saveTokens } from "../../utils/token";
+import { errorMessage, successMessage } from "../../hooks/message";
 
 
 
@@ -26,34 +27,20 @@ const AdminLogin = () => {
 
     const handleAdminLogin = async (values) => {
         try {
-          const response = await loginApi(values);
-          console.log(response)
-    
-          if (response && response.status === 200) {
-            const accessToken = response?.data?.accessToken;
-            const refreshToken = response?.data?.refreshToken;
-    
-            localStorage.setItem("AdminAccessToken", accessToken);
-            localStorage.setItem("AdminRefreshToken", refreshToken);
-    
-
-            const updatedAxiosInstance = axiosInstance("AdminAccessToken");
-    
-            const secureResponse = await updatedAxiosInstance.get("/admin/secure-route");
-    
-            console.log("Secure route response:", secureResponse.data);
-    
-            message.success(response?.data?.message);
-            navigate("/admin/dashboard");
-          } else {
-            console.error("Unexpected response:", response);
-            message.error("Something went wrong. Please try again.");
-          }
+            const response = await loginApi(values);
+            if (response && response.status === 200) {
+                const accessToken = response?.data?.accessToken;
+                const refreshToken = response?.data?.refreshToken;
+                saveTokens(accessToken, refreshToken)
+                successMessage(response?.data?.message)
+                navigate("/admin/dashboard");
+            } else {
+                errorMessage("Something went wrong. Please try again.")
+            }
         } catch (error) {
-          console.log(error.response.data.message);
-          message.error(error.response.data.message);
+            errorMessage(error?.response?.data?.message)
         }
-      };
+    };
 
     return (
         <div className="flex flex-col pl-3 pr-3 md:flex-row h-screen">
