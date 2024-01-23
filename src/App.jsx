@@ -4,15 +4,15 @@ import AdminRoutes from "./routes/admin/AdminRoutes";
 
 
 function App() {
-    return (
-        <>
-            <Router>
-              <Routes>
-                <Route path='/admin/*' element={<AdminRoutes />}  />
-              </Routes>
-            </Router>
-        </>
-    );
+  return (
+    <div className="bg-[#E3E6E6]">
+      <Router>
+        <Routes>
+          <Route path='/admin/*' element={<AdminRoutes />} />
+        </Routes>
+      </Router>
+    </div>
+  );
 }
 
 export default App;

@@ -11,7 +11,7 @@ import AdminLayouts from '../../layouts/AdminLayouts';
 
 const AdminRoutes = () =>{
     return(
-        <div>
+        <div >
             <Routes>
                 <Route element={<AdminLayouts/>}>
                 <Route path="/login" element={<AdminLoginPage/>}></Route>
