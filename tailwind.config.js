@@ -11,7 +11,7 @@ export default {
       },
       colors:{
         yellow:{
-          50:"#F7CA00",
+          50:"#fad11b",
           40:"#ffdd45"
         }
       }

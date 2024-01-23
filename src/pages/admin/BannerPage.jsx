@@ -2,7 +2,7 @@ import Banner from "../../components/admin/Banner";
 
 const BannerPage = () => {
     return (
-        <div>
+        <div >
            <Banner/>
         </div>
     );

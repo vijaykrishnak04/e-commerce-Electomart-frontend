@@ -31,16 +31,16 @@ const DataTable = ({ columns, data }) => {
                         placeholder="Search..."
                         value={globalFilter || ""}
                         onChange={handleSearchChange}
-                        className="px-4 py-2 border mb-3 border-gray-500 rounded"
+                        className="px-4 py-2 border mb-3 focus:outline-gray-400 border-gray-500 rounded"
                     />
                 </div>
 
-                <table {...getTableProps()} className="min-w-full border border-gray-300">
+                <table {...getTableProps()} className="min-w-full ">
                     <thead>
                         {headerGroups.map((headerGroup) => (
                             <tr {...headerGroup.getHeaderGroupProps()}>
                                 {headerGroup.headers.map((column) => (
-                                    <th {...column.getHeaderProps()} className="border px-4 py-2">
+                                    <th {...column.getHeaderProps()} className="border  border-black px-4 py-2">
                                         {column.render("Header")}
                                     </th>
                                 ))}
@@ -53,7 +53,7 @@ const DataTable = ({ columns, data }) => {
                             return (
                                 <tr {...row.getRowProps()}>
                                     {row.cells.map((cell) => (
-                                        <td {...cell.getCellProps()} className="border px-4 py-2">
+                                        <td {...cell.getCellProps()} className="border border-black  px-4 py-2">
                                             {cell.render("Cell")}
                                         </td>
                                     ))}
@@ -63,16 +63,22 @@ const DataTable = ({ columns, data }) => {
                     </tbody>
                 </table>
 
-                {/* Pagination */}
                 <div className="mt-4 flex justify-between">
-                    <button onClick={() => previousPage()}>Previous</button>
+                    <button
+                        className="px-3 py-1 border border-black border-opacity-25 rounded"
+                        onClick={() => previousPage()}
+                    >
+                        Previous
+                    </button>
                     <span>
                         Page{" "}
                         <strong>
                             {pageIndex + 1} of {Math.ceil(data.length / pageSize)}
                         </strong>
                     </span>
-                    <button onClick={() => nextPage()}>Next</button>
+                    <button className="px-3 py-1 border border-black border-opacity-25 rounded" onClick={() => nextPage()}>
+                        Next
+                    </button>
                 </div>
             </div>
         </>
