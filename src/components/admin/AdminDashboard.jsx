@@ -1,9 +1,9 @@
-import AdminSidebar from "./AdminSidebar"
+
 
 const AdminDashboard = () => {
-    return(
+    return (
         <>
-        <AdminSidebar/>
+            <h1>This is dashboard</h1>
         </>
     )
 }

@@ -2,24 +2,19 @@
 import React, { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import Button from "../../components/Button";
-import InputField from "../../components/InputField";
 import Logo from "../../assets/images/site-logo.png";
 import { IoPerson } from "react-icons/io5";
 import { GoEye, GoEyeClosed } from "react-icons/go";
 import { adminLoginValidationSchema } from "../../schema/admin/adminLoginValidaton";
 import { loginApi, testingApi } from "../../services/adminServices";
 import { useNavigate } from "react-router-dom";
-import { message } from 'antd'
 import { saveTokens } from "../../utils/token";
 import { errorMessage, successMessage } from "../../hooks/message";
-
-
-
 
 const AdminLogin = () => {
     const [showPassword, setShowPassword] = useState(false);
 
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
     const togglePasswordVisibility = () => {
         setShowPassword(!showPassword);
@@ -31,14 +26,15 @@ const AdminLogin = () => {
             if (response && response.status === 200) {
                 const accessToken = response?.data?.accessToken;
                 const refreshToken = response?.data?.refreshToken;
-                saveTokens(accessToken, refreshToken)
-                successMessage(response?.data?.message)
+                saveTokens(accessToken, refreshToken);
+                successMessage(response?.data?.message);
                 navigate("/admin/dashboard");
             } else {
-                errorMessage("Something went wrong. Please try again.")
+                errorMessage("Something went wrong. Please try again.");
             }
         } catch (error) {
-            errorMessage(error?.response?.data?.message)
+            console.log(error);
+            errorMessage(error?.response?.data?.message);
         }
     };
 
