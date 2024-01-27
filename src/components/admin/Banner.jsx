@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from 'react-redux'
 import Button from "../../components/Button";
 import DataTable from "../../components/DataTable";
 import Modal from "../../components/Modal";
@@ -6,17 +7,31 @@ import { MdDelete } from "react-icons/md";
 import { BiSolidEdit } from "react-icons/bi";
 import { message } from "antd";
 import { errorMessage, successMessage } from "../../hooks/message";
-import { deleteBannerApi, getBannersApi, uploadBannerApi } from "../../services/adminServices";
+import { deleteBannerApi, getBannersApi } from "../../services/adminServices";
+import { AddBannerData } from "../../app/slices/admin/adminBannerSlice";
 
 const Banner = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedFile, setSelectedFile] = useState(null);
     const [data, setData] = useState([]);
-    console.log(data, "data")
+
+    const dispatch = useDispatch();
+    const bannerState = useSelector((state)=>state?.Banner?.bannerData)
+    console.log(bannerState,"from redux")
+
+
+
+    // useEffect(() => {
+    //     fetchBanners();
+    // }, [])
 
     useEffect(() => {
-        fetchBanners();
-    }, [])
+        setData(mergedData);
+    }, [bannerState]);
+
+
+    const mergedData = [...data, bannerState];
+
 
     const fetchBanners = async () => {
         try {
@@ -66,6 +81,35 @@ const Banner = () => {
         }
     };
 
+    // const handleSubmit = async () => {
+    //     try {
+    //         if (!selectedFile) {
+    //             errorMessage("Please select an image.");
+    //             return;
+    //         }
+    //         const formData = new FormData();
+    //         formData.append("image", selectedFile);
+    //         const response = await uploadBannerApi(formData);
+    //         if (response && response?.status === 200) {
+    //             handleCloseModal();
+    //             setSelectedFile(null);
+    //             successMessage("Banner Created Successfully");
+    //             setData([...data, {
+    //                 id: response?.data._id,
+    //                 imageUrl: response?.data?.imageUrl,
+    //                 publicId: response?.data?.publicId,
+    //                 createdAt: response?.data?.createdAt,
+    //                 Actions: "Actions"
+    //             }]);
+    //         } else {
+    //             errorMessage("Something Went wrong");
+    //         }
+    //     } catch (error) {
+    //         console.log(error);
+    //         errorMessage(error?.response?.data?.error);
+    //     }
+    // };
+
     const handleSubmit = async () => {
         try {
             if (!selectedFile) {
@@ -74,21 +118,10 @@ const Banner = () => {
             }
             const formData = new FormData();
             formData.append("image", selectedFile);
-            const response = await uploadBannerApi(formData);
-            if (response && response?.status === 200) {
-                handleCloseModal();
-                setSelectedFile(null);
-                successMessage("Banner Created Successfully");
-                setData([...data, {
-                    id: response?.data._id,
-                    imageUrl: response?.data?.imageUrl,
-                    publicId: response?.data?.publicId,
-                    createdAt: response?.data?.createdAt,
-                    Actions: "Actions"
-                }]);
-            } else {
-                errorMessage("Something Went wrong");
-            }
+            await dispatch(AddBannerData(formData));
+            handleCloseModal();
+            setSelectedFile(null);
+            successMessage("Banner Created Successfully");
         } catch (error) {
             console.log(error);
             errorMessage(error?.response?.data?.error);
