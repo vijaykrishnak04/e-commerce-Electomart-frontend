@@ -1,17 +1,39 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Button from "../../components/Button";
 import DataTable from "../../components/DataTable";
 import Modal from "../../components/Modal";
 import { MdDelete } from "react-icons/md";
 import { BiSolidEdit } from "react-icons/bi";
-import Banners from "../../assets/images/banner.jpg";
 import { message } from "antd";
-import { errorMessage } from "../../hooks/message";
-import { uploadBannerApi } from "../../services/adminServices";
+import { errorMessage, successMessage } from "../../hooks/message";
+import { deleteBannerApi, getBannersApi, uploadBannerApi } from "../../services/adminServices";
 
 const Banner = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedFile, setSelectedFile] = useState(null);
+    const [data, setData] = useState([]);
+    console.log(data, "data")
+
+    useEffect(() => {
+        fetchBanners();
+    }, [])
+
+    const fetchBanners = async () => {
+        try {
+            const response = await getBannersApi();
+            console.log(response, "response")
+            if (response && response.status === 200) {
+                setData(response.data)
+            } else {
+                errorMessage("Failed to fetch banners");
+            }
+        } catch (error) {
+            console.log(error)
+            errorMessage(error?.response?.data?.error);
+        }
+    };
+
+
 
     const handleOpenModal = () => {
         setIsModalOpen(true);
@@ -47,24 +69,40 @@ const Banner = () => {
     const handleSubmit = async () => {
         try {
             if (!selectedFile) {
-                errorMessage("Please select an image.")
+                errorMessage("Please select an image.");
                 return;
             }
             const formData = new FormData();
-            formData.append("bannerImage", selectedFile);
-
+            formData.append("image", selectedFile);
             const response = await uploadBannerApi(formData);
-            console.log(response)
-
+            if (response && response?.status === 200) {
+                handleCloseModal();
+                setSelectedFile(null);
+                successMessage("Banner Created Successfully");
+                setData([...data, {
+                    id: response?.data._id,
+                    imageUrl: response?.data?.imageUrl,
+                    publicId: response?.data?.publicId,
+                    createdAt: response?.data?.createdAt,
+                    Actions: "Actions"
+                }]);
+            } else {
+                errorMessage("Something Went wrong");
+            }
         } catch (error) {
-            console.log(error)
-            errorMessage(error?.response?.data?.error)
+            console.log(error);
+            errorMessage(error?.response?.data?.error);
         }
-
     };
 
-    const handleDelete = (id) => {
-        console.log(`Delete item with id: ${id}`);
+    const handleDelete = async (id, publicId) => {
+        const deleteResponse = await deleteBannerApi({ id, publicId })
+        console.log(deleteResponse)
+        if (deleteResponse && deleteResponse === 200) {
+            successMessage("Banner Delete Successfully")
+        } else {
+            errorMessage("Something went wrong")
+        }
     };
 
     const handleEdit = (id) => {
@@ -72,17 +110,20 @@ const Banner = () => {
     };
 
     const columns = [
-        { Header: "No", accessor: "id" },
+        {
+            Header: "No",
+            Cell: ({ row }) => row.index + 1,
+        },
         {
             Header: "Banner Image",
-            accessor: "bannerImage",
+            accessor: "imageUrl",
             Cell: ({ value }) => (
                 <div className="flex justify-center w-full">
-                    <img src={Banners} alt="Banner" className="w-12 h-16 object-cover rounded" />
+                    <img src={value} alt="Banner" className="w-12 h-16 object-cover rounded" />
                 </div>
             ),
         },
-        { Header: "Updated On", accessor: "updatedOn" },
+        { Header: "Updated On", accessor: "createdAt" },
         {
             Header: "Actions",
             accessor: "Actions",
@@ -94,15 +135,11 @@ const Banner = () => {
                     />
                     <MdDelete
                         className="text-red-500 w-10 h-7 cursor-pointer"
-                        onClick={() => handleDelete(row.original.id)}
+                        onClick={() => handleDelete(row.original.id, row.original.publicId)}
                     />
                 </div>
             ),
         },
-    ];
-
-    const data = [
-        { id: 1, bannerImage: Banners, updatedOn: "2024-01-23", Actions: "hello" },
     ];
 
     return (
@@ -126,6 +163,7 @@ const Banner = () => {
                         <input
                             type="file"
                             id="fileInput"
+                            name="image"
                             className="hidden"
                             onChange={handleFileChange}
                         />

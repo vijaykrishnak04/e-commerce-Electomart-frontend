@@ -9,22 +9,22 @@ import AdminLayouts from '../../layouts/AdminLayouts';
 
 
 
-const AdminRoutes = () =>{
-    return(
+const AdminRoutes = () => {
+    return (
         <div >
             <Routes>
-                <Route element={<AdminLayouts/>}>
-                <Route path="/login" element={<AdminLoginPage/>}></Route>
-                <Route path="/dashboard" element={<AdminDashboardPage/>}></Route>
-                <Route path="/banners" element={<BannerPage/>}></Route>
-               </Route>
+                <Route path="/login" element={<AdminLoginPage />}></Route>
+                <Route element={<AdminLayouts />}>
+                    <Route path="/dashboard" element={<AdminDashboardPage />}></Route>
+                    <Route path="/banners" element={<BannerPage />}></Route>
+                </Route>
 
 
-                
-                <Route path='/*' element={<NotFoundPage/>}></Route>
+
+                <Route path='/*' element={<NotFoundPage />}></Route>
             </Routes>
 
-           
+
 
         </div>
     )

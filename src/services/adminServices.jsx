@@ -15,3 +15,12 @@ export const uploadBannerApi = (formData) => {
         },
     });
 };
+
+export const deleteBannerApi = ({id,publicId}) =>{
+    console.log(publicId)
+    return axios.delete(`/admin/delete-banner/${id}/${publicId}`)
+}
+
+export const getBannersApi = () => {
+    return axios.get('/admin/get-banners')
+}
