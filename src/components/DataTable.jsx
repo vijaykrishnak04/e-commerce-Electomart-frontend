@@ -14,7 +14,7 @@ const DataTable = ({ columns, data }) => {
         previousPage,
         canNextPage,
         canPreviousPage,
-    } = useTable({ columns, data }, useGlobalFilter, usePagination);
+    } = useTable({ columns, data: data || [] }, useGlobalFilter, usePagination);
 
     const { globalFilter, pageIndex, pageSize } = state;
 

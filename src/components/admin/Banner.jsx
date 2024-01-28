@@ -7,8 +7,8 @@ import { MdDelete } from "react-icons/md";
 import { BiSolidEdit } from "react-icons/bi";
 import { message } from "antd";
 import { errorMessage, successMessage } from "../../hooks/message";
-import { deleteBannerApi, getBannersApi } from "../../services/adminServices";
-import { AddBannerData } from "../../app/slices/admin/adminBannerSlice";
+import { deleteBannerApi} from "../../services/adminServices";
+import { AddBannerData, getAllBanners } from "../../app/slices/admin/adminBannerSlice";
 
 const Banner = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -17,38 +17,10 @@ const Banner = () => {
 
     const dispatch = useDispatch();
     const bannerState = useSelector((state)=>state?.Banner?.bannerData)
-    console.log(bannerState,"from redux")
-
-
-
-    // useEffect(() => {
-    //     fetchBanners();
-    // }, [])
 
     useEffect(() => {
-        setData(mergedData);
-    }, [bannerState]);
-
-
-    const mergedData = [...data, bannerState];
-
-
-    const fetchBanners = async () => {
-        try {
-            const response = await getBannersApi();
-            console.log(response, "response")
-            if (response && response.status === 200) {
-                setData(response.data)
-            } else {
-                errorMessage("Failed to fetch banners");
-            }
-        } catch (error) {
-            console.log(error)
-            errorMessage(error?.response?.data?.error);
-        }
-    };
-
-
+        dispatch(getAllBanners());
+    }, [dispatch]);
 
     const handleOpenModal = () => {
         setIsModalOpen(true);
@@ -81,35 +53,6 @@ const Banner = () => {
         }
     };
 
-    // const handleSubmit = async () => {
-    //     try {
-    //         if (!selectedFile) {
-    //             errorMessage("Please select an image.");
-    //             return;
-    //         }
-    //         const formData = new FormData();
-    //         formData.append("image", selectedFile);
-    //         const response = await uploadBannerApi(formData);
-    //         if (response && response?.status === 200) {
-    //             handleCloseModal();
-    //             setSelectedFile(null);
-    //             successMessage("Banner Created Successfully");
-    //             setData([...data, {
-    //                 id: response?.data._id,
-    //                 imageUrl: response?.data?.imageUrl,
-    //                 publicId: response?.data?.publicId,
-    //                 createdAt: response?.data?.createdAt,
-    //                 Actions: "Actions"
-    //             }]);
-    //         } else {
-    //             errorMessage("Something Went wrong");
-    //         }
-    //     } catch (error) {
-    //         console.log(error);
-    //         errorMessage(error?.response?.data?.error);
-    //     }
-    // };
-
     const handleSubmit = async () => {
         try {
             if (!selectedFile) {
@@ -122,6 +65,7 @@ const Banner = () => {
             handleCloseModal();
             setSelectedFile(null);
             successMessage("Banner Created Successfully");
+
         } catch (error) {
             console.log(error);
             errorMessage(error?.response?.data?.error);
@@ -187,7 +131,7 @@ const Banner = () => {
             </div>
 
             <div className="mt-5 border  border-black p-5 rounded text-center mx-auto bg-white">
-                <DataTable columns={columns} data={data} />
+                <DataTable columns={columns} data={Array.isArray(bannerState) ? bannerState : [bannerState]} />
             </div>
 
             <Modal isOpen={isModalOpen} className="w-[30rem] p-9 h-[21rem] " onClose={handleCloseModal} >

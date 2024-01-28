@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { uploadBannerApi } from '../../../services/adminServices';
+import { uploadBannerApi ,getBannersApi } from '../../../services/adminServices';
 
 
 
@@ -25,6 +25,18 @@ export const AddBannerData = createAsyncThunk(
     }
 );
 
+export const getAllBanners = createAsyncThunk(
+    "admin/get-banners",
+    async () =>{
+        try{
+            const response = await getBannersApi()
+            return response.data
+        }catch(error){
+            throw error
+        }
+    }
+)
+
 export const bannerSlice = createSlice({
     name: 'bannerData',
     initialState,
@@ -38,7 +50,7 @@ export const bannerSlice = createSlice({
                 console.log(action,"Action data")
                 state.isLoading = false;
                 state.isSuccess = true;
-                state.bannerData = action.payload;
+                state.bannerData = [...state.bannerData, action.payload];
                 state.message = "Banner uploaded successfully";
             })
             .addCase(AddBannerData.rejected, (state, action) => {
@@ -46,6 +58,21 @@ export const bannerSlice = createSlice({
                 state.isError = true;
                 state.error = action.error.message;
                 state.message = "Banner upload failed";
+            })
+            .addCase(getAllBanners.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(getAllBanners.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isSuccess = true;
+                state.bannerData = action.payload;
+                state.message = "Banners fetched successfully";
+            })
+            .addCase(getAllBanners.rejected, (state, action) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.error = action.error.message || "Unknown error";
+                state.message = "Failed to fetch banners";
             });
     },
 });
