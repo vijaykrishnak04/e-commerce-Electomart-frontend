@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { addCategoryApi } from '../../../services/adminServices';
+import { addCategoryApi, getAllCategoriesApi } from '../../../services/adminServices';
 
 const initialState = {
     CategoryData: [],
@@ -24,6 +24,19 @@ export const AddCategory = createAsyncThunk(
     }
 );
 
+export const getAllCategories = createAsyncThunk(
+    "admin/get-categories",
+    async () => {
+        try {
+            const response = await getAllCategoriesApi();
+            console.log(response,"in thunk api")
+            return response.data
+        } catch (error) {
+            throw error;
+        }
+    }
+);
+
 
 export const CategorySlice = createSlice({
     name: 'CategoryData',
@@ -35,9 +48,10 @@ export const CategorySlice = createSlice({
                 state.isLoading = true;
             })
             .addCase(AddCategory.fulfilled, (state, action) => {
+                console.log(action,"action")
                 state.isLoading = false;
                 state.isSuccess = true;
-                state.CategoryData = action.payload.data
+                state.CategoryData = [...state.CategoryData, action.payload];
                 state.message = "Category Created successfully";
             })
             .addCase(AddCategory.rejected, (state, action) => {
@@ -45,6 +59,21 @@ export const CategorySlice = createSlice({
                 state.isError = true;
                 state.error = action.error.message;
                 state.message = "Category adding failed";
+            })
+            .addCase(getAllCategories.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(getAllCategories.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isSuccess = true;
+                state.CategoryData = action.payload
+                state.message = "";
+            })
+            .addCase(getAllCategories.rejected, (state, action) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.error = action.error.message;
+                state.message = "";
             })
     },
 });

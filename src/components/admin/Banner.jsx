@@ -5,7 +5,6 @@ import DataTable from "../../components/DataTable";
 import Modal from "../../components/Modal";
 import { MdDelete } from "react-icons/md";
 import { BiSolidEdit } from "react-icons/bi";
-import { message } from "antd";
 import { errorMessage, successMessage } from "../../hooks/message";
 import { deleteBannerApi} from "../../services/adminServices";
 import { AddBannerData, getAllBanners } from "../../app/slices/admin/adminBannerSlice";

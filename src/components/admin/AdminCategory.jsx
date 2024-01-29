@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "../Button";
 import DataTable from "../DataTable";
 import Modal from "../Modal";
@@ -6,8 +6,8 @@ import { errorMessage, successMessage } from "../../hooks/message";
 import { MdDelete } from "react-icons/md";
 import { BiSolidEdit } from "react-icons/bi";
 import ImageCropper from "../ImageCropper";
-import { useDispatch } from "react-redux";
-import { AddCategory } from "../../app/slices/admin/adminCategorySlice";
+import { useDispatch, useSelector } from "react-redux";
+import { AddCategory, getAllCategories } from "../../app/slices/admin/adminCategorySlice";
 
 
 
@@ -19,6 +19,12 @@ const AdminCategory = () => {
     const staticAspectRatio = 1
 
     const dispatch = useDispatch()
+    const CategoryState = useSelector((state)=>state?.Category?.CategoryData)
+    console.log(CategoryState)
+
+    useEffect(() => {
+        dispatch(getAllCategories());
+    }, [dispatch]);
 
     const handleOpenCropperModal = () => {
         setCropperModalOpen(true);
@@ -70,23 +76,21 @@ const AdminCategory = () => {
        
     };
 
-    const data = []
-
     const columns = [
         {
             Header: "No",
             Cell: ({ row }) => row.index + 1,
         },
         {
-            Header: "Banner Image",
-            accessor: "imageUrl",
+            Header: "Category Image",
+            accessor: "categoryImage.url",
             Cell: ({ value }) => (
                 <div className="flex justify-center w-full">
                     <img src={value} alt="Banner" className="w-12 h-16 object-cover rounded" />
                 </div>
             ),
         },
-        { Header: "Updated On", accessor: "createdAt" },
+        { Header: "Category Name", accessor: "categoryName" },
         {
             Header: "Actions",
             accessor: "Actions",
@@ -118,7 +122,7 @@ const AdminCategory = () => {
             </div>
 
             <div className="mt-5 border  border-black p-5 rounded text-center mx-auto bg-white">
-                <DataTable columns={columns} data={data} />
+            <DataTable columns={columns} data={Array.isArray(CategoryState) ? CategoryState : [CategoryState]} />
             </div>
 
 

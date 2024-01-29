@@ -11,12 +11,12 @@ export const testingApi = () => {
 export const uploadBannerApi = (formData) => {
     return axios.post('/admin/upload-banner', formData, {
         headers: {
-            'Content-Type': 'multipart/form-data', 
+            'Content-Type': 'multipart/form-data',
         },
     });
 };
 
-export const deleteBannerApi = ({id,publicId}) =>{
+export const deleteBannerApi = ({ id, publicId }) => {
     console.log(publicId)
     return axios.delete(`/admin/delete-banner/${id}/${publicId}`)
 }
@@ -25,8 +25,14 @@ export const getBannersApi = () => {
     return axios.get('/admin/get-banners')
 }
 
-export const addCategoryApi = (data) =>{
-    return axios.post('/admin/add-category',data,{ headers: {
-        'Content-Type': 'multipart/form-data', 
-    }})
+export const addCategoryApi = (data) => {
+    return axios.post('/admin/add-category', data, {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        }
+    })
+}
+
+export const getAllCategoriesApi = () => {
+    return axios.get('/admin/get-categories')
 }
