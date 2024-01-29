@@ -24,3 +24,9 @@ export const deleteBannerApi = ({id,publicId}) =>{
 export const getBannersApi = () => {
     return axios.get('/admin/get-banners')
 }
+
+export const addCategoryApi = (data) =>{
+    return axios.post('/admin/add-category',data,{ headers: {
+        'Content-Type': 'multipart/form-data', 
+    }})
+}

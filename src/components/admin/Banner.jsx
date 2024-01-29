@@ -13,7 +13,6 @@ import { AddBannerData, getAllBanners } from "../../app/slices/admin/adminBanner
 const Banner = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedFile, setSelectedFile] = useState(null);
-    const [data, setData] = useState([]);
 
     const dispatch = useDispatch();
     const bannerState = useSelector((state)=>state?.Banner?.bannerData)
@@ -47,7 +46,7 @@ const Banner = () => {
                 if (width === requiredWidth && height === requiredHeight) {
                     setSelectedFile(file);
                 } else {
-                    message.error("Image dimensions must be 3757px x 1434px.");
+                    errorMessage("Image dimensions must be 3757px x 1434px.")
                 }
             };
         }

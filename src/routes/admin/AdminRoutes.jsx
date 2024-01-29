@@ -5,6 +5,7 @@ import NotFoundPage from '../../pages/NotFoundPage';
 import AdminDashboardPage from '../../pages/admin/AdminDashboardPage';
 import BannerPage from '../../pages/admin/BannerPage';
 import AdminLayouts from '../../layouts/AdminLayouts';
+import CategoryPage from '../../pages/admin/CategoryPage';
 
 
 
@@ -17,6 +18,7 @@ const AdminRoutes = () => {
                 <Route element={<AdminLayouts />}>
                     <Route path="/dashboard" element={<AdminDashboardPage />}></Route>
                     <Route path="/banners" element={<BannerPage />}></Route>
+                    <Route path="/categories" element={<CategoryPage/>}></Route>
                 </Route>
 
 
