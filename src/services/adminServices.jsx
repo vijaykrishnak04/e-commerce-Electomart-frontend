@@ -36,3 +36,18 @@ export const addCategoryApi = (data) => {
 export const getAllCategoriesApi = () => {
     return axios.get('/admin/get-categories')
 }
+
+export const AddSubcategoryApi = (data) => {
+    return axios.post('/admin/add-subcategory', data, {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        }
+    })
+}
+
+export const getAllSubcategoriesApi = () => {
+    return axios.get('/admin/get-subcategories')
+}
+
+
+
