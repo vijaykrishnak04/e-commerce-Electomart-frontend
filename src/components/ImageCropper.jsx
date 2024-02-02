@@ -1,5 +1,3 @@
-// ImageCropper.js
-
 import { useRef, useState, useEffect } from "react";
 import ReactCrop, {
   centerCrop,
@@ -90,11 +88,11 @@ const ImageCropper = ({ closeModal, updateAvatar, dynamicAspectRatio }) => {
             />
           </ReactCrop>
           <button
-            className="text-white font-mono text-xs py-2 px-4 rounded-2xl mt-4 bg-sky-500 hover:bg-sky-600"
+            className="text-white text-sm py-2 px-4 rounded-2xl mt-4 bg-sky-500 hover:bg-sky-600"
             onClick={() => {
               setCanvasPreview(
-                imgRef.current, // HTMLImageElement
-                previewCanvasRef.current, // HTMLCanvasElement
+                imgRef.current, 
+                previewCanvasRef.current, 
                 convertToPixelCrop(
                   crop,
                   imgRef.current.width,
