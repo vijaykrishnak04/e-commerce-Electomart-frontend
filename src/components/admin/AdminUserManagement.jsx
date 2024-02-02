@@ -1,4 +1,3 @@
-import { BiSolidEdit } from "react-icons/bi";
 import Button from "../Button";
 import DataTable from "../DataTable";
 import { getAllUsers } from "../../app/slices/admin/adminUserManagementSlice";
@@ -14,9 +13,6 @@ const AdminUserManagement = () => {
     }, [dispatch]);
 
     const userData = useSelector((state) => state?.userManagement?.userData)
-    console.log(userData)
-
-
 
     const columns = [
         {

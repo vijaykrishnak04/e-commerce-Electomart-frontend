@@ -53,6 +53,9 @@ export const getAllUsersApi = () => {
     return axios.get('/admin/get-all-users')
 }
 
+export const getAllOrdersApi = () =>{
+    return axios.get('/admin/get-all-orders')
+}
 
 
 

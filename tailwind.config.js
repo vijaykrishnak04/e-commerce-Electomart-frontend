@@ -17,6 +17,10 @@ export default {
         green:{
           50:"#66f542",
           40:"#94fc79"
+        },
+        blue:{
+          50:"#4784ff",
+          40:"#6a9bfc"
         }
       }
     },
