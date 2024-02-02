@@ -1,8 +1,8 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { addCategoryApi, getAllCategoriesApi } from '../../../services/adminServices';
+import { AddSubcategoryApi, getAllSubcategoriesApi } from '../../../services/adminServices';
 
 const initialState = {
-    CategoryData: [],
+    SubcategoryData: [],
     isLoading: false,
     isSuccess: false,
     isError: false,
@@ -11,25 +11,25 @@ const initialState = {
 }
 
 
-export const AddCategory = createAsyncThunk(
-    "admin/add-category",
+export const AddSubcategory = createAsyncThunk(
+    "admin/add-subcategory",
     async (fromData) => {
         try {
-            const response = await addCategoryApi(fromData);
-            console.log(response,"in thunk api")
+            const response = await AddSubcategoryApi(fromData);
+            console.log(response, "in thunk api")
             return response.data
-        } catch (error) {
+        } catch (error){
             throw error;
         }
     }
 );
 
-export const getAllCategories = createAsyncThunk(
-    "admin/get-categories",
+export const getAllSubcategories = createAsyncThunk(
+    "admin/get-subcategories",
     async () => {
         try {
-            const response = await getAllCategoriesApi();
-            console.log(response,"in category thunk api")
+            const response = await getAllSubcategoriesApi();
+            console.log(response, "subcategory in thunk api")
             return response.data
         } catch (error) {
             throw error;
@@ -38,38 +38,38 @@ export const getAllCategories = createAsyncThunk(
 );
 
 
-export const CategorySlice = createSlice({
-    name: 'CategoryData',
+export const subcategorySlice = createSlice({
+    name: 'SubcategoryData',
     initialState,
     reducers: {},
     extraReducers: (builder) => {
         builder
-            .addCase(AddCategory.pending, (state) => {
+            .addCase(AddSubcategory.pending, (state) => {
                 state.isLoading = true;
             })
-            .addCase(AddCategory.fulfilled, (state, action) => {
+            .addCase(AddSubcategory.fulfilled, (state, action) => {
                 console.log("line 51",action)
                 state.isLoading = false;
                 state.isSuccess = true;
-                state.CategoryData = [...state.CategoryData, action.payload];
+                state.SubcategoryData =  [...state.SubcategoryData,action.payload];
                 state.message = "Category Created successfully";
             })
-            .addCase(AddCategory.rejected, (state, action) => {
+            .addCase(AddSubcategory.rejected, (state, action) => {
                 state.isLoading = false;
                 state.isError = true;
                 state.error = action.error.message;
                 state.message = "Category adding failed";
             })
-            .addCase(getAllCategories.pending, (state) => {
+            .addCase(getAllSubcategories.pending, (state) => {
                 state.isLoading = true;
             })
-            .addCase(getAllCategories.fulfilled, (state, action) => {
+            .addCase(getAllSubcategories.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.isSuccess = true;
-                state.CategoryData = action.payload
+                state.SubcategoryData = action.payload
                 state.message = "";
             })
-            .addCase(getAllCategories.rejected, (state, action) => {
+            .addCase(getAllSubcategories.rejected, (state, action) => {
                 state.isLoading = false;
                 state.isError = true;
                 state.error = action.error.message;
