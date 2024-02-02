@@ -49,5 +49,11 @@ export const getAllSubcategoriesApi = () => {
     return axios.get('/admin/get-subcategories')
 }
 
+export const getAllUsersApi = () => {
+    return axios.get('/admin/get-all-users')
+}
+
+
+
 
 
