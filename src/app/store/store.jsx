@@ -9,7 +9,7 @@ const rootReducer = combineReducers({
   Banner: bannerSlice.reducer,
   Category: CategorySlice.reducer,
   Subcategory: subcategorySlice.reducer,
-  userManagment: adminUserSlice.reducer
+  userManagement: adminUserSlice.reducer
 });
 
 

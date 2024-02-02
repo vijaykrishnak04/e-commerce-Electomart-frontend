@@ -37,7 +37,7 @@ export const adminUserSlice = createSlice({
             .addCase(getAllUsers.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.isSuccess = true;
-                state.bannerData = action.payload;
+                state.userData = action.payload;
                 state.message = "";
             })
             .addCase(getAllUsers.rejected, (state, action) => {

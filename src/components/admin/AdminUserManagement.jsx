@@ -1,21 +1,31 @@
 import { BiSolidEdit } from "react-icons/bi";
 import Button from "../Button";
 import DataTable from "../DataTable";
+import { getAllUsers } from "../../app/slices/admin/adminUserManagementSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
 
 const AdminUserManagement = () => {
 
-    const data = []
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+        dispatch(getAllUsers());
+    }, [dispatch]);
+
+    const userData = useSelector((state) => state?.userManagement?.userData)
+    console.log(userData)
+
+
 
     const columns = [
         {
             Header: "No",
             Cell: ({ row }) => row.index + 1,
         },
-        { Header: "Email", accessor: "subCategoryName" }, 
-        {
-            Header: "Phone",
-            accessor: "categoryName",
-        },
+        { Header: "Full Name", accessor: "fullName" },
+        { Header: "Email", accessor: "email" }, 
+        { Header: "Phone", accessor: "mobile" },
         {
             Header: "Actions",
             accessor: "Actions",
@@ -29,18 +39,19 @@ const AdminUserManagement = () => {
             ),
         },
     ];
+    
 
-    return (
-        <>
-            <div className="flex justify-between item-center p-4">
-                <h1 className="text-black text-2xl font-poppins font-Bold">Users</h1>
-            </div>
-            <div className="mt-5 border  border-black p-5 rounded text-center mx-auto bg-white">
-                <DataTable columns={columns} data={data} />
-            </div>
+return (
+    <>
+        <div className="flex justify-between item-center p-4">
+            <h1 className="text-black text-2xl font-poppins font-Bold">Users</h1>
+        </div>
+        <div className="mt-5 border  border-black p-5 rounded text-center mx-auto bg-white">
+            <DataTable columns={columns} data={Array.isArray(userData) ? userData : [userData]} />
+        </div>
 
-        </>
-    )
+    </>
+)
 }
 
 export default AdminUserManagement;
