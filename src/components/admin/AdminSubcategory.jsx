@@ -22,13 +22,10 @@ const AdminSubcategory = () => {
     const staticAspectRatio = 1
 
     const dispatch = useDispatch()
-    const hello = useSelector((state) => state?.Category?.CategoryData)
-    console.log("line 25", hello);
     const { isLoading } = useSelector((state) => state?.Subcategory)
-
     const categoryData = useSelector((state) => state?.Category?.CategoryData)
     const subcategoryData = useSelector((state) => state?.Subcategory?.SubcategoryData)
-    console.log("line 26 ", categoryData)
+    console.log("line 28", subcategoryData)
 
     useEffect(() => {
         const fetchData = async () => {
@@ -39,7 +36,7 @@ const AdminSubcategory = () => {
                 console.log(error)
             }
         };
-    
+
         fetchData();
     }, [dispatch]);
 
@@ -71,8 +68,6 @@ const AdminSubcategory = () => {
         label: category?.categoryName,
     }));
 
-    console.log("line 64", dynamicOptions);
-
     const handleSubmit = async () => {
         if (!subcategoryName.trim()) {
             errorMessage("Please enter a valid category name.");
@@ -94,7 +89,7 @@ const AdminSubcategory = () => {
             const imageBlob = new Blob([arrayBuffer], { type: 'image/png' });
             formData.append("image", imageBlob);
             formData.append("subcategoryName", subcategoryName);
-            formData.append("selectedCategory", selectedOption)
+            formData.append("selectedCategory", selectedOption);
             await dispatch(AddSubcategory(formData));
             handleCloseNameModal();
             successMessage("Subcategory created successfully!");
@@ -103,7 +98,6 @@ const AdminSubcategory = () => {
         }
 
     };
-
     const columns = [
         {
             Header: "No",
@@ -111,14 +105,14 @@ const AdminSubcategory = () => {
         },
         {
             Header: "Subcategory Image",
-            accessor: "subCategoryImage.url", 
+            accessor: "subcategoryImage.url",
             Cell: ({ value }) => (
                 <div className="flex justify-center">
                     <img src={value} alt="Subcategory" className="w-12 h-16  object-cover rounded" />
                 </div>
             ),
         },
-        { Header: "Subcategory Name", accessor: "subCategoryName" }, 
+        { Header: "Subcategory Name", accessor: "subcategoryName" },
         {
             Header: "Category Name",
             accessor: "categoryName",
@@ -142,7 +136,8 @@ const AdminSubcategory = () => {
     ];
 
 
- 
+
+
 
     return (
         <>

@@ -9,6 +9,7 @@ import CategoryPage from '../../pages/admin/CategoryPage';
 import SubCategory from '../../pages/admin/SubCatgegory';
 import AdminUserManagementPage from '../../pages/admin/AdminUserManagementPage';
 import AdminOrderManagementPage from '../../pages/admin/AdminOrderManagementPage';
+import CouponPage from '../../pages/admin/CouponPage';
 
 
 
@@ -25,6 +26,7 @@ const AdminRoutes = () => {
                     <Route path="/subcategories" element={<SubCategory />}></Route>
                     <Route path="/users" element={<AdminUserManagementPage />}></Route>
                     <Route path="/orders" element={<AdminOrderManagementPage />}></Route>
+                    <Route path="/coupons" element={<CouponPage/>}></Route>
                 </Route>
 
                 <Route path='/*' element={<NotFoundPage />}></Route>
