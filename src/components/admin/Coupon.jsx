@@ -13,7 +13,6 @@ import { successMessage } from "../../hooks/message";
 const Coupon = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const coupon = useSelector((state) => state?.adminCoupons?.couponData);
-    console.log("line 13", coupon);
 
     const dispatch = useDispatch();
 
