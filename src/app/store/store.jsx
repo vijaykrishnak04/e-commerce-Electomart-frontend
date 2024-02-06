@@ -4,6 +4,7 @@ import { CategorySlice } from '../slices/admin/adminCategorySlice';
 import { subcategorySlice} from '../slices/admin/adminSubcategorySlice';
 import { adminUserSlice } from '../slices/admin/adminUserManagementSlice';
 import { adminOrderSlice } from '../slices/admin/adminOrderSlice';
+import { adminCouponSlice } from '../slices/admin/adminCouponSlice';
 
 
 const rootReducer = combineReducers({
@@ -11,7 +12,8 @@ const rootReducer = combineReducers({
   Category: CategorySlice.reducer,
   Subcategory: subcategorySlice.reducer,
   userManagement: adminUserSlice.reducer,
-  adminOrders:adminOrderSlice.reducer
+  adminOrders:adminOrderSlice.reducer,
+  adminCoupons:adminCouponSlice.reducer
 });
 
 

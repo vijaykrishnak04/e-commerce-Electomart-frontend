@@ -53,10 +53,17 @@ export const getAllUsersApi = () => {
     return axios.get('/admin/get-all-users')
 }
 
-export const getAllOrdersApi = () =>{
+export const getAllOrdersApi = () => {
     return axios.get('/admin/get-all-orders')
 }
 
+export const addCouponsApi = (data) => {
+    return axios.post('/admin/add-coupons', data)
+}
+
+export const getAllCouponsApi = () => {
+    return axios.get('/admin/get-all-coupons')
+}
 
 
 
