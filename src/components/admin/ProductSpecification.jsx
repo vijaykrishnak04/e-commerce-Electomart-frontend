@@ -1,7 +1,7 @@
-const ProductSpecification = ({ title, description }) => {
+const ProductSpecification = ({ title, description,index }) => {
     return (
-        <div className="mt-4">
-            <strong>{title}:</strong> {description}
+        <div className="mt-4 ">
+           {index+1}.<strong className="ml-2">{title}:</strong> {description}
         </div>
     );
 };
