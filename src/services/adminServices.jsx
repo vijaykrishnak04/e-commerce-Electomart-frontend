@@ -65,5 +65,18 @@ export const getAllCouponsApi = () => {
     return axios.get('/admin/get-all-coupons')
 }
 
+export const addProductApi = (data) => {
+    console.log("reached to servie file",data)
+    return axios.post('/admin/add-product', data, {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        },
+    })
+}
+
+export const getAllProductApi = () => {
+    return axios.get('/admin/get-all-products')
+}
+
 
 
