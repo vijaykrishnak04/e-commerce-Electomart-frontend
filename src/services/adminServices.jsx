@@ -17,7 +17,6 @@ export const uploadBannerApi = (formData) => {
 };
 
 export const deleteBannerApi = ({ id, publicId }) => {
-    console.log(publicId)
     return axios.delete(`/admin/delete-banner/${id}/${publicId}`)
 }
 
@@ -81,5 +80,11 @@ export const deleteCouponApi = (id) => {
     return axios.delete(`/admin/delete-coupon/${id}`)
 }
 
+export const deleteCategoryApi = ({ id, publicId }) => {
+    return axios.delete(`/admin/delete-category/${id}`, { data: { publicId } });
+};
 
-
+export const deleteSubcategoryApi = ({categoryId,subcategoryId,publicId}) => {
+    console.log(categoryId,subcategoryId,publicId)
+    return axios.delete(`/admin/categories/${categoryId}/subcategories/${subcategoryId}`, { data: { publicId } });
+}

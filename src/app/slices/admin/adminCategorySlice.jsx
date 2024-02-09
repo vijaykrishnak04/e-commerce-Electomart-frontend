@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { addCategoryApi, getAllCategoriesApi } from '../../../services/adminServices';
+import { addCategoryApi, deleteCategoryApi, getAllCategoriesApi } from '../../../services/adminServices';
 
 const initialState = {
     CategoryData: [],
@@ -16,7 +16,6 @@ export const AddCategory = createAsyncThunk(
     async (fromData) => {
         try {
             const response = await addCategoryApi(fromData);
-            console.log(response,"in thunk api")
             return response.data
         } catch (error) {
             throw error;
@@ -29,13 +28,25 @@ export const getAllCategories = createAsyncThunk(
     async () => {
         try {
             const response = await getAllCategoriesApi();
-            console.log(response,"in category thunk api")
             return response.data
         } catch (error) {
             throw error;
         }
     }
 );
+
+export const deleteCategory = createAsyncThunk(
+    "admin/delete-category",
+    async ({id,publicId}) => {
+        try {
+            const response = await deleteCategoryApi({id,publicId});
+            return response.data
+        } catch (error) {
+            throw error;
+        }
+    }
+);
+
 
 
 export const CategorySlice = createSlice({
@@ -67,9 +78,26 @@ export const CategorySlice = createSlice({
                 state.isLoading = false;
                 state.isSuccess = true;
                 state.CategoryData = action.payload
-                state.message = "";
             })
             .addCase(getAllCategories.rejected, (state, action) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.error = action.error.message;
+                state.message = "";
+            })
+            .addCase(deleteCategory.pending, (state) => {
+                state.isLoading = true;
+                state.isError = false;
+                state.error = '';
+            })
+            .addCase(deleteCategory.fulfilled, (state, action) => {
+                console.log("line 95",action)
+                state.isLoading = false;
+                state.isSuccess = true;
+                state.CategoryData = state.CategoryData.filter(category => category?._id !== action?.payload?._id);
+                state.message = "Category Deleted Successfully";
+            })
+            .addCase(deleteCategory.rejected, (state, action) => {
                 state.isLoading = false;
                 state.isError = true;
                 state.error = action.error.message;

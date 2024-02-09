@@ -5,13 +5,12 @@ import { BiSolidEdit } from "react-icons/bi";
 import { useEffect, useState } from "react";
 import Modal from "../Modal";
 import ImageCropper from "../ImageCropper";
-import { AddSubcategory, getAllSubcategories } from "../../app/slices/admin/adminSubcategorySlice";
+import { AddSubcategory, deleteSubcategory, getAllSubcategories } from "../../app/slices/admin/adminSubcategorySlice";
 import { useDispatch, useSelector } from "react-redux";
 import Dropdown from "../Dropdown";
 import { getAllCategories } from "../../app/slices/admin/adminCategorySlice";
 import { errorMessage, successMessage } from "../../hooks/message";
-
-
+import useSwal from "../../hooks/useSwal";
 
 const AdminSubcategory = () => {
     const [cropperModalOpen, setCropperModalOpen] = useState(false);
@@ -19,13 +18,12 @@ const AdminSubcategory = () => {
     const [croppedImage, setCroppedImage] = useState(null);
     const [subcategoryName, setSubcategoryName] = useState("");
     const [selectedOption, setSelectedOption] = useState("");
-    const staticAspectRatio = 1
+    const staticAspectRatio = 1;
 
-    const dispatch = useDispatch()
-    const { isLoading } = useSelector((state) => state?.Subcategory)
-    const categoryData = useSelector((state) => state?.Category?.CategoryData)
-    const subcategoryData = useSelector((state) => state?.Subcategory?.SubcategoryData)
-    console.log("line 28", subcategoryData)
+    const dispatch = useDispatch();
+    const categoryData = useSelector((state) => state?.Category?.CategoryData);
+    const subcategoryData = useSelector((state) => state?.Subcategory?.SubcategoryData);
+    console.log("line 28", subcategoryData);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -33,12 +31,27 @@ const AdminSubcategory = () => {
                 await dispatch(getAllCategories());
                 await dispatch(getAllSubcategories());
             } catch (error) {
-                console.log(error)
+                console.log(error);
             }
         };
 
         fetchData();
     }, [dispatch]);
+
+    const { isLoading, isSuccess, isError, message, error } =
+        useSelector((state) => state?.Subcategory);
+
+    useEffect(() => {
+        if (isError) {
+            errorMessage(error)
+        }
+        if (isSuccess) {
+            successMessage(message)
+        }
+    }, [isError, message, error, dispatch, isSuccess]);
+
+
+    const { showInfo } = useSwal();
 
     const handleOpenCropperModal = () => {
         setCropperModalOpen(true);
@@ -62,8 +75,16 @@ const AdminSubcategory = () => {
         handleOpenNameModal();
     };
 
+    const handleDelete = async (categoryId, subcategoryId, publicId, subcategoryName) => {
+        const result = await showInfo(`Are you sure you want to delete ${subcategoryName}?`);
+        if (result.isConfirmed) {
+            dispatch(deleteSubcategory({ categoryId, subcategoryId, publicId }));
+        } else {
+            console.log("Delete operation canceled");
+        }
+    };
 
-    const dynamicOptions = categoryData.map(category => ({
+    const dynamicOptions = categoryData.map((category) => ({
         value: category?.categoryName,
         label: category?.categoryName,
     }));
@@ -80,23 +101,21 @@ const AdminSubcategory = () => {
 
         try {
             const formData = new FormData();
-            const decodedImage = atob(croppedImage.split(',')[1]);
+            const decodedImage = atob(croppedImage.split(",")[1]);
 
             const arrayBuffer = new Uint8Array(decodedImage.length);
             for (let i = 0; i < decodedImage.length; i++) {
                 arrayBuffer[i] = decodedImage.charCodeAt(i);
             }
-            const imageBlob = new Blob([arrayBuffer], { type: 'image/png' });
+            const imageBlob = new Blob([arrayBuffer], { type: "image/png" });
             formData.append("image", imageBlob);
             formData.append("subcategoryName", subcategoryName);
             formData.append("selectedCategory", selectedOption);
             await dispatch(AddSubcategory(formData));
             handleCloseNameModal();
-            successMessage("Subcategory created successfully!");
         } catch (error) {
-            errorMessage(error)
+            errorMessage(error);
         }
-
     };
     const columns = [
         {
@@ -128,16 +147,19 @@ const AdminSubcategory = () => {
                     />
                     <MdDelete
                         className="text-red-500 w-10 h-7 cursor-pointer"
-                        onClick={() => handleDelete(row?.original?.id, row?.original?.publicId)}
+                        onClick={() =>
+                            handleDelete(
+                                row?.original?.categoryId,
+                                row?.original?.subcategoryId,
+                                row?.original?.subcategoryImage?.publicId,
+                                row?.original?.subcategoryName,
+                            )
+                        }
                     />
                 </div>
             ),
         },
     ];
-
-
-
-
 
     return (
         <>
@@ -184,10 +206,8 @@ const AdminSubcategory = () => {
                     />
                 </div>
             </Modal>
-
-
         </>
-    )
-}
+    );
+};
 
 export default AdminSubcategory;

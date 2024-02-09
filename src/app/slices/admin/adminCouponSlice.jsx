@@ -94,7 +94,7 @@ export const adminCouponSlice = createSlice({
                 state.isLoading = false;
                 state.isSuccess = true;
                 state.couponData = state.couponData.filter(coupon => coupon?._id !== action.meta.arg);
-                state.message = "";
+                state.message = "Coupon Deleted Successfully";
             })
             .addCase(deleteCoupon.rejected, (state, action) => {
                 state.isLoading = false;

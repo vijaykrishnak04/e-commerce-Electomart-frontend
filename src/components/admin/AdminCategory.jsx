@@ -7,20 +7,33 @@ import { MdDelete } from "react-icons/md";
 import { BiSolidEdit } from "react-icons/bi";
 import ImageCropper from "../ImageCropper";
 import { useDispatch, useSelector } from "react-redux";
-import { AddCategory, getAllCategories } from "../../app/slices/admin/adminCategorySlice";
-
-
+import { AddCategory, deleteCategory, getAllCategories } from "../../app/slices/admin/adminCategorySlice";
+import useSwal from "../../hooks/useSwal";
 
 const AdminCategory = () => {
     const [cropperModalOpen, setCropperModalOpen] = useState(false);
     const [nameModalOpen, setNameModalOpen] = useState(false);
     const [croppedImage, setCroppedImage] = useState(null);
     const [categoryName, setCategoryName] = useState("");
-    const staticAspectRatio = 1
+    const staticAspectRatio = 1;
 
-    const dispatch = useDispatch()
-    const CategoryState = useSelector((state)=>state?.Category?.CategoryData)
-    console.log(CategoryState)
+    const dispatch = useDispatch();
+    const CategoryState = useSelector((state) => state?.Category?.CategoryData);
+    console.log("line 23", CategoryState);
+
+    const { isLoading, isSuccess, isError, message, error } =
+        useSelector((state) => state?.Category);
+
+    useEffect(() => {
+        if (isError) {
+            errorMessage(error)
+        }
+        if (isSuccess) {
+            successMessage(message)
+        }
+    }, [isError, message, error, dispatch, isSuccess]);
+
+    const { showInfo } = useSwal();
 
     useEffect(() => {
         dispatch(getAllCategories());
@@ -48,32 +61,37 @@ const AdminCategory = () => {
         handleOpenNameModal();
     };
 
-  
+    const handleDelete = async (id, publicId, categoryName) => {
+        const result = await showInfo(`Are you sure you want to delete ${categoryName}?`);
+        if (result.isConfirmed) {
+            dispatch(deleteCategory({ id, publicId }));
+        } else {
+            console.log("Delete operation canceled");
+        }
+    };
 
     const handleSubmit = async () => {
         if (!categoryName.trim()) {
             errorMessage("Please enter a valid category name.");
             return;
         }
-    
-        try{
+
+        try {
             const formData = new FormData();
-            const decodedImage = atob(croppedImage.split(',')[1]);
+            const decodedImage = atob(croppedImage.split(",")[1]);
 
             const arrayBuffer = new Uint8Array(decodedImage.length);
             for (let i = 0; i < decodedImage.length; i++) {
                 arrayBuffer[i] = decodedImage.charCodeAt(i);
             }
-            const imageBlob = new Blob([arrayBuffer], { type: 'image/png' });
+            const imageBlob = new Blob([arrayBuffer], { type: "image/png" });
             formData.append("image", imageBlob);
             formData.append("categoryName", categoryName);
             await dispatch(AddCategory(formData));
             handleCloseNameModal();
-            successMessage("Category created successfully!");
-        }catch(error){
-            errorMessage(error.data.response.error)
+        } catch (error) {
+            errorMessage(error.data.response.error);
         }
-       
     };
 
     const columns = [
@@ -102,7 +120,13 @@ const AdminCategory = () => {
                     />
                     <MdDelete
                         className="text-red-500 w-10 h-7 cursor-pointer"
-                        onClick={() => handleDelete(row?.original?.id, row?.original?.publicId)}
+                        onClick={() =>
+                            handleDelete(
+                                row?.original?._id,
+                                row?.original?.categoryImage?.publicId,
+                                row?.original?.categoryName
+                            )
+                        }
                     />
                 </div>
             ),
@@ -122,9 +146,8 @@ const AdminCategory = () => {
             </div>
 
             <div className="mt-5 border  border-black p-5 rounded text-center mx-auto bg-white">
-            <DataTable columns={columns} data={Array.isArray(CategoryState) ? CategoryState : [CategoryState]} />
+                <DataTable columns={columns} data={Array.isArray(CategoryState) ? CategoryState : [CategoryState]} />
             </div>
-
 
             <Modal isOpen={cropperModalOpen} className="w-[40rem] p-9 h-auto" onClose={handleCloseCropperModal}>
                 <ImageCropper updateAvatar={updateAvatar} dynamicAspectRatio={staticAspectRatio} />
@@ -140,8 +163,12 @@ const AdminCategory = () => {
                         onChange={(e) => setCategoryName(e.target.value)}
                         className="mt-4 w-full md:w-96 p-2 border border-gray-500 rounded"
                     />
-                    <Button text="Save Category" onClick={handleSubmit} className="mt-4 text-white font-sans 
-                    text-sm py-3 px-7 rounded-2xl bg-sky-500 hover:bg-sky-600" />
+                    <Button
+                        text="Save Category"
+                        onClick={handleSubmit}
+                        className="mt-4 text-white font-sans 
+                    text-sm py-3 px-7 rounded-2xl bg-sky-500 hover:bg-sky-600"
+                    />
                 </div>
             </Modal>
         </div>

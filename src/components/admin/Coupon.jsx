@@ -30,6 +30,9 @@ const Coupon = () => {
         if (isError) {
           errorMessage(error)
         }
+        if(isSuccess){
+            successMessage(message)
+        }
       }, [isError, message, error, dispatch, isSuccess]);
 
     const handleOpenModal = () => {
