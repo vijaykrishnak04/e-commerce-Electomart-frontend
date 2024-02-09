@@ -5,20 +5,32 @@ import Modal from "../Modal";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { CouponSchema } from "../../schema/admin/couponValidation";
 import { useDispatch, useSelector } from "react-redux";
-import { addCoupons, getAllCoupons } from "../../app/slices/admin/adminCouponSlice";
+import { addCoupons,  deleteCoupon, getAllCoupons } from "../../app/slices/admin/adminCouponSlice";
 import { MdDelete } from "react-icons/md";
 import { BiSolidEdit } from "react-icons/bi";
-import { successMessage } from "../../hooks/message";
+import { errorMessage, successMessage } from "../../hooks/message";
+import useSwal from "../../hooks/useSwal";
 
 const Coupon = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const coupon = useSelector((state) => state?.adminCoupons?.couponData);
+    const { isLoading, isSuccess, isError, message, error } =
+    useSelector((state) => state.adminCoupons);
+    console.log("line 19",error)
+
+    const { showInfo } = useSwal();
 
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(getAllCoupons());
+        dispatch(getAllCoupons())
     }, [dispatch]);
+
+    useEffect(() => {
+        if (isError) {
+          errorMessage(error)
+        }
+      }, [isError, message, error, dispatch, isSuccess]);
 
     const handleOpenModal = () => {
         setIsModalOpen(true);
@@ -26,6 +38,15 @@ const Coupon = () => {
 
     const handleCloseModal = () => {
         setIsModalOpen(false);
+    };
+
+    const handleDelete = async (id, couponCode) => {
+        const result = await showInfo(`Are you sure you want to delete ${couponCode}?`);
+        if (result.isConfirmed) {
+            dispatch(deleteCoupon(id));
+        } else {
+            console.log("Delete operation canceled");
+        }
     };
 
     const columns = [
@@ -51,11 +72,11 @@ const Coupon = () => {
                 <div className="flex justify-center">
                     <BiSolidEdit
                         className="text-blue-500 w-10 h-7 cursor-pointer ml-2"
-                        onClick={() => handleEdit(row?.original?.id)}
+                        onClick={() => handleEdit(row?.original?._id)}
                     />
                     <MdDelete
                         className="text-red-500 w-10 h-7 cursor-pointer"
-                        onClick={() => handleDelete(row?.original?.id, row?.original?.publicId)}
+                        onClick={() => handleDelete(row?.original?._id, row?.original?.couponCode)}
                     />
                 </div>
             ),
@@ -64,7 +85,7 @@ const Coupon = () => {
 
     const handleSubmit = (values) => {
         dispatch(addCoupons(values));
-        successMessage("Banner Created Successfully")
+        successMessage("Banner Created Successfully");
         handleCloseModal();
     };
 

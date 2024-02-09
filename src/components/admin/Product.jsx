@@ -323,7 +323,7 @@ const Product = () => {
                                                 <Field
                                                     as="select"
                                                     name="category"
-                                                    className="rounded-md"
+                                                    className="rounded-md mt-2 h-10 w-36 pl-2"
                                                 >
                                                     <option value="" label="Select category" />
                                                     {categories.map((category) => (
@@ -341,7 +341,7 @@ const Product = () => {
                                                 <Field
                                                     as="select"
                                                     name="subcategory"
-                                                    className="rounded-md"
+                                                    className="rounded-md mt-2 h-10 w-36 pl-2"
                                                 >
                                                     <option value="" label="Select Subcategory" />
                                                     {subcategories.map((subcategory) => (
@@ -358,7 +358,7 @@ const Product = () => {
                                                 <Field
                                                     as="select"
                                                     name="deliveryTime"
-                                                    className="rounded-md"
+                                                    className="rounded-md mt-2 h-10 w-36 pl-2"
                                                 >
                                                     <option value="" label="Select Timing" />
                                                     <option value="In Stock" label="In Stock" />
@@ -376,7 +376,7 @@ const Product = () => {
                                                     name="size"
                                                     as="select"
                                                     onChange={(e) => setSize(e.target.value)}
-                                                    className="rounded-md"
+                                                    className="rounded-md mt-2 h-10 w-36 pl-2"
                                                 >
                                                     <option value="" label="Select Size Type" />
                                                     <option value="Footware" label="Footware" />
