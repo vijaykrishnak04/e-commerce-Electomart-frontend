@@ -19,17 +19,15 @@ const AdminCategory = () => {
 
     const dispatch = useDispatch();
     const CategoryState = useSelector((state) => state?.Category?.CategoryData);
-    console.log("line 23", CategoryState);
 
-    const { isLoading, isSuccess, isError, message, error } =
-        useSelector((state) => state?.Category);
+    const { isLoading, isSuccess, isError, message, error } = useSelector((state) => state?.Category);
 
     useEffect(() => {
         if (isError) {
-            errorMessage(error)
+            errorMessage(error);
         }
         if (isSuccess) {
-            successMessage(message)
+            successMessage(message);
         }
     }, [isError, message, error, dispatch, isSuccess]);
 
@@ -66,7 +64,7 @@ const AdminCategory = () => {
         if (result.isConfirmed) {
             dispatch(deleteCategory({ id, publicId }));
         } else {
-            console.log("Delete operation canceled");
+            errorMessage("Delete operation canceled");
         }
     };
 
@@ -166,8 +164,8 @@ const AdminCategory = () => {
                     <Button
                         text="Save Category"
                         onClick={handleSubmit}
-                        className="mt-4 text-white font-sans 
-                    text-sm py-3 px-7 rounded-2xl bg-sky-500 hover:bg-sky-600"
+                        className="mt-4 text-white font-sans text-sm py-3 px-14 rounded-full bg-sky-500 hover:bg-sky-600"
+                        loading={isLoading}
                     />
                 </div>
             </Modal>

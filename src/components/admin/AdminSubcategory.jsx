@@ -188,6 +188,7 @@ const AdminSubcategory = () => {
                         selectedOption={selectedOption}
                         onChange={(e) => setSelectedOption(e.target.value)}
                         options={dynamicOptions}
+                        defaultLabel="Select Subcategory"
                     />
                     <input
                         type="text"

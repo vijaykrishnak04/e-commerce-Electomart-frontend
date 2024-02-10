@@ -1,14 +1,19 @@
 import React from 'react';
+import { PulseLoader } from 'react-spinners';
 
-const Button = ({types,  text, onClick, className, disabled }) => {
+const Button = ({ type, text, onClick, className, disabled, loading }) => {
   return (
     <button
-    type={types}
+      type={type}
       className={className}
       onClick={onClick}
-      disabled={disabled}
+      disabled={disabled || loading}
     >
-      {text}
+      {loading ? (
+        <PulseLoader color="#fff" size={8} margin={4} />
+      ) : (
+        text
+      )}
     </button>
   );
 };

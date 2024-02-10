@@ -16,7 +16,7 @@ export const AddSubcategory = createAsyncThunk("admin/add-subcategory", async (f
         console.log(response, "in thunk api");
         return response.data;
     } catch (error) {
-        throw error;
+        throw error.response.data.message
     }
 });
 
@@ -51,9 +51,10 @@ export const subcategorySlice = createSlice({
         builder
             .addCase(AddSubcategory.pending, (state) => {
                 state.isLoading = true;
+                state.isError = false;
+                state.error = '';
             })
             .addCase(AddSubcategory.fulfilled, (state, action) => {
-                console.log("line 51", action);
                 state.isLoading = false;
                 state.isSuccess = true;
                 state.SubcategoryData = [...state.SubcategoryData, action.payload];
@@ -63,7 +64,6 @@ export const subcategorySlice = createSlice({
                 state.isLoading = false;
                 state.isError = true;
                 state.error = action.error.message;
-                state.message = "subCategory adding failed";
             })
             .addCase(getAllSubcategories.pending, (state) => {
                 state.isLoading = true;

@@ -6,8 +6,8 @@ import Modal from "../../components/Modal";
 import { MdDelete } from "react-icons/md";
 import { BiSolidEdit } from "react-icons/bi";
 import { errorMessage, successMessage } from "../../hooks/message";
-import { deleteBannerApi} from "../../services/adminServices";
-import { AddBannerData, getAllBanners } from "../../app/slices/admin/adminBannerSlice";
+import { AddBannerData, deleteBanner, getAllBanners } from "../../app/slices/admin/adminBannerSlice";
+import useSwal from "../../hooks/useSwal";
 
 const Banner = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -16,9 +16,24 @@ const Banner = () => {
     const dispatch = useDispatch();
     const bannerState = useSelector((state)=>state?.Banner?.bannerData)
 
+    const { isLoading, isSuccess, isError, message, error } =
+    useSelector((state) => state?.Banner);
+
+    const { showInfo } = useSwal();
+
     useEffect(() => {
         dispatch(getAllBanners());
     }, [dispatch]);
+
+    useEffect(() => {
+        if (isError) {
+            errorMessage(error)
+        }
+        if (isSuccess) {
+            successMessage(message)
+        }
+    }, [isError, message, error, dispatch, isSuccess]);
+
 
     const handleOpenModal = () => {
         setIsModalOpen(true);
@@ -71,12 +86,12 @@ const Banner = () => {
     };
 
     const handleDelete = async (id, publicId) => {
-        const deleteResponse = await deleteBannerApi({ id, publicId })
-        console.log(deleteResponse)
-        if (deleteResponse && deleteResponse === 200) {
-            successMessage("Banner Delete Successfully")
+        console.log("line 89",id,publicId)
+        const result = await showInfo('Are you sure you want to delete?');
+        if (result.isConfirmed) {
+            dispatch(deleteBanner({id ,publicId}));
         } else {
-            errorMessage("Something went wrong")
+            errorMessage("Delete operation canceled")
         }
     };
 
@@ -110,7 +125,7 @@ const Banner = () => {
                     />
                     <MdDelete
                         className="text-red-500 w-10 h-7 cursor-pointer"
-                        onClick={() => handleDelete(row.original.id, row.original.publicId)}
+                        onClick={() => handleDelete(row.original._id, row.original.publicId)}
                     />
                 </div>
             ),
@@ -159,6 +174,7 @@ const Banner = () => {
                     <Button
                         className='bg-yellow-50 px-14 py-2 rounded-full border border-gray-500 shadow-md'
                         text='Upload'
+                        loading={isLoading}
                         onClick={handleSubmit}
                     />
                 </div>

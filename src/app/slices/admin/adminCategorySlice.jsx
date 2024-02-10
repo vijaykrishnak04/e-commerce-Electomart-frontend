@@ -16,9 +16,10 @@ export const AddCategory = createAsyncThunk(
     async (fromData) => {
         try {
             const response = await addCategoryApi(fromData);
+            console.log("line 19",response)
             return response.data
         } catch (error) {
-            throw error;
+          throw  error.response.data.message
         }
     }
 );
@@ -37,7 +38,7 @@ export const getAllCategories = createAsyncThunk(
 
 export const deleteCategory = createAsyncThunk(
     "admin/delete-category",
-    async ({id,publicId}) => {
+    async (id,publicId) => {
         try {
             const response = await deleteCategoryApi({id,publicId});
             return response.data
@@ -57,6 +58,8 @@ export const CategorySlice = createSlice({
         builder
             .addCase(AddCategory.pending, (state) => {
                 state.isLoading = true;
+                state.isError = false;
+                state.error = '';
             })
             .addCase(AddCategory.fulfilled, (state, action) => {
                 console.log("line 51",action)
@@ -66,10 +69,10 @@ export const CategorySlice = createSlice({
                 state.message = "Category Created successfully";
             })
             .addCase(AddCategory.rejected, (state, action) => {
+                console.log("line 69",action)
                 state.isLoading = false;
                 state.isError = true;
                 state.error = action.error.message;
-                state.message = "Category adding failed";
             })
             .addCase(getAllCategories.pending, (state) => {
                 state.isLoading = true;
