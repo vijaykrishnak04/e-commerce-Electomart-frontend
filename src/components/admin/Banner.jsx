@@ -14,10 +14,10 @@ const Banner = () => {
     const [selectedFile, setSelectedFile] = useState(null);
 
     const dispatch = useDispatch();
-    const bannerState = useSelector((state)=>state?.Banner?.bannerData)
+    const bannerState = useSelector((state) => state?.Banner?.bannerData)
 
     const { isLoading, isSuccess, isError, message, error } =
-    useSelector((state) => state?.Banner);
+        useSelector((state) => state?.Banner);
 
     const { showInfo } = useSwal();
 
@@ -86,10 +86,10 @@ const Banner = () => {
     };
 
     const handleDelete = async (id, publicId) => {
-        console.log("line 89",id,publicId)
+        console.log("line 89", id, publicId)
         const result = await showInfo('Are you sure you want to delete?');
         if (result.isConfirmed) {
-            dispatch(deleteBanner({id ,publicId}));
+            dispatch(deleteBanner({ id, publicId }));
         } else {
             errorMessage("Delete operation canceled")
         }
