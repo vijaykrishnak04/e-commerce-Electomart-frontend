@@ -17,7 +17,6 @@ export const AddBannerData = createAsyncThunk(
     async (fromData) => {
         try {
             const response = await uploadBannerApi(fromData);
-            console.log(response, "in thunk api")
             return response.data
         } catch (error) {
             throw error;

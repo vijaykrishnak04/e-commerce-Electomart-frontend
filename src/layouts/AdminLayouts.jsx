@@ -12,7 +12,7 @@ const AdminLayouts = () => {
       <div className="flex-1">
         <AdminNavbar />
         <div className="p-4">
-          <Outlet  />
+          <Outlet />
         </div>
       </div>
     </div>
