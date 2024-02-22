@@ -10,7 +10,7 @@ function App() {
       <Router>
         <Routes>
           <Route path='/admin/*' element={<AdminRoutes />} />
-          <Route path="/" element={<UserRoutes />}></Route>
+          <Route path="/*" element={<UserRoutes />}></Route>
         </Routes>
       </Router>
     </div>

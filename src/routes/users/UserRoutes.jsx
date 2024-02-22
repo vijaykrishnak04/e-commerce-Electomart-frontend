@@ -7,12 +7,10 @@ const UserRoutes = () => {
     return (
         <div>
             <Routes>
-                <Route path="/" element={<UserLayout/>}></Route>
-
-
-
-
+            <Route element={<UserLayout />}>
+                <Route path="/" element={<HomePage/>}></Route>
                 <Route path='/*' element={<NotFoundPage />}></Route>
+                </Route>
             </Routes>
 
         </div>

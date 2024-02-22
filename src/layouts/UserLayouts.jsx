@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import Navbar from "../components/users/Navbar"
+import Navbar from "../components/users/Navbar";
+import { Outlet } from 'react-router-dom'
 import MobileNavbar from "../components/MobileNavbar";
 
 const UserLayout = () => {
@@ -21,9 +22,14 @@ const UserLayout = () => {
             {showMobileNavbar ? (
                 <MobileNavbar />
             ) : (
-                <div >
-                  <Navbar/>
-                </div>
+                < >
+                    <div >
+                        <Navbar />
+                    </div>
+                    <div>
+                        <Outlet />
+                    </div>
+                </ >
             )}
         </div>
     )
