@@ -1,38 +1,39 @@
 import { useEffect, useState } from "react";
 import Navbar from "../components/users/Navbar";
-import { Outlet } from 'react-router-dom'
+import { Outlet } from "react-router-dom";
 import MobileNavbar from "../components/MobileNavbar";
 
 const UserLayout = () => {
-    const [showMobileNavbar, setShowMobileNavbar] = useState(false);
+  const [isMobileView, setIsMobileView] = useState(
+    window.matchMedia("(max-width: 768px)").matches
+  );
 
-    useEffect(() => {
-        const handleResize = () => {
-            setShowMobileNavbar(window.innerWidth <= 1444);
-        };
-        handleResize();
-        window.addEventListener("resize", handleResize);
-        return () => {
-            window.removeEventListener("resize", handleResize);
-        };
-    }, []);
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobileView(window.matchMedia("(max-width: 768px)").matches);
+    };
 
-    return (
-        <div>
-            {showMobileNavbar ? (
-                <MobileNavbar />
-            ) : (
-                < >
-                    <div >
-                        <Navbar />
-                    </div>
-                    <div>
-                        <Outlet />
-                    </div>
-                </ >
-            )}
-        </div>
-    )
-}
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
-export default UserLayout
+  return (
+    <div>
+      {isMobileView ? (
+        <>
+          <MobileNavbar />
+          <Navbar />
+        </>
+      ) : (
+        <Navbar />
+      )}
+      <div>
+        <Outlet />
+      </div>
+    </div>
+  );
+};
+
+export default UserLayout;

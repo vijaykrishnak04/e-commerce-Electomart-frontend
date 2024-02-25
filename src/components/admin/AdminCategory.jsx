@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useEffect, useState } from "react";
 import Button from "../Button";
 import DataTable from "../DataTable";
@@ -85,6 +86,7 @@ const AdminCategory = () => {
             const imageBlob = new Blob([arrayBuffer], { type: "image/png" });
             formData.append("image", imageBlob);
             formData.append("categoryName", categoryName);
+            console.log(formData);
             await dispatch(AddCategory(formData));
             handleCloseNameModal();
         } catch (error) {

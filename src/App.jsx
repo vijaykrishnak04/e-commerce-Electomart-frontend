@@ -6,7 +6,7 @@ import UserRoutes from "./routes/users/UserRoutes";
 
 function App() {
   return (
-    <div >
+    <div>
       <Router>
         <Routes>
           <Route path='/admin/*' element={<AdminRoutes />} />

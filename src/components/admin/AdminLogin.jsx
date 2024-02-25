@@ -6,7 +6,7 @@ import Logo from "../../assets/images/site-logo.png";
 import { IoPerson } from "react-icons/io5";
 import { GoEye, GoEyeClosed } from "react-icons/go";
 import { adminLoginValidationSchema } from "../../schema/admin/adminLoginValidaton";
-import { loginApi, testingApi } from "../../services/adminServices";
+import { loginApi } from "../../services/adminServices";
 import { useNavigate } from "react-router-dom";
 import { saveTokens } from "../../utils/token";
 import { errorMessage, successMessage } from "../../hooks/message";

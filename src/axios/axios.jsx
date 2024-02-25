@@ -1,6 +1,6 @@
 import axios from "axios";
 import { getAccessToken, getRefreshToken } from "../utils/token";
-
+import { clearTokens, saveTokens } from "../utils/token";
 const instance = axios.create({
     baseURL: import.meta.env.VITE_APP_SERVER_URL,
     timeout: 5000,
@@ -47,7 +47,7 @@ instance.interceptors.response.use(
 const refreshAccessToken = async () => {
     try {
         const refreshToken = getRefreshToken();
-        const response = await api.post("/admin/refresh-token", { refreshToken });
+        const response = await axios.post("/admin/refresh-token", { refreshToken });
         const { newAccessToken } = response.data;
         saveTokens(newAccessToken);
         return newAccessToken;

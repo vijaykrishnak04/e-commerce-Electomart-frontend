@@ -1,43 +1,42 @@
-import { IoMenu, IoSearchOutline } from "react-icons/io5";
-import Logo from '../assets/images/logo.jpg';
-import { RxAvatar } from "react-icons/rx";
-import { IoCartOutline } from "react-icons/io5";
-import InputField from "./InputField";
+import { useState } from 'react';
+import { FaHome, FaTags, FaUser, FaShoppingCart } from 'react-icons/fa';
+import { MdCategory } from 'react-icons/md';
+import Cart from './users/Cart';
 
 const MobileNavbar = () => {
-    return (
-        <div>
-            <div className="bg-white px-4 py-2 h-14  flex items-center justify-between">
-                <div className="flex items-center gap-x-5">
-                    <IoMenu className="w-8 h-8" />
-                    <img src={Logo} className="w-18 h-14" alt="logo loading" />
-                </div>
+  const [isCartOpen, setIsCartOpen] = useState(false);
 
-                <div className="flex items-center gap-x-3">
-                    <RxAvatar className="text-2xl" />
-                    <h3 className="text-gray-800 text-sm">Login</h3>
-                    <div className="bg-white flex items-center">
-                        <h1 className="hidden md:block font-semibold border-r">Cart</h1>
-                        <div className="relative">
-                            <IoCartOutline className="w-8 h-8" />
-                            <span className="bg-red-500 text-white rounded-full px-2 py-1 text-xs -top-2 left-4 absolute">
-                                0
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div className="relative px-5 h-16 p-2  ">
-                <input
-                    type="text"
-                    placeholder="Search for Products, Brands and More"
-                    className="w-full h-12 p-3 pl-10 bg-[#dcf2fa] rounded-md outline-none"
-                />
-                <IoSearchOutline className="absolute font-bold left-8 top-5 w-5 h-5 text-gray-800" />
-            </div>
-        </div>
-
-    );
+  const toggleCart = () => {
+    setIsCartOpen(!isCartOpen);
+  };
+  return (
+    <div className="fixed bottom-0 left-0 right-0 bg-white drop-shadow-2xl md:hidden z-40">
+      <div className="flex justify-between items-center text-gray-800 px-4">
+        <a href="#home" className="flex flex-col items-center flex-grow text-center py-2">
+          <FaHome className="text-2xl" />
+          <span className="text-xs">Home</span>
+        </a>
+        <a href="#categories" className="flex flex-col items-center flex-grow text-center py-2">
+          <MdCategory className="text-2xl" />
+          <span className="text-xs">Categories</span>
+        </a>
+        <a href="#offers" className="flex flex-col items-center flex-grow text-center py-2">
+          <FaTags className="text-2xl" />
+          <span className="text-xs">Offers</span>
+        </a>
+        <a href="#account" className="flex flex-col items-center flex-grow text-center py-2">
+          <FaUser className="text-2xl" />
+          <span className="text-xs">My Account</span>
+        </a>
+        <a className="flex flex-col items-center flex-grow text-center py-2 relative" onClick={toggleCart}>
+          <FaShoppingCart className="text-2xl" />
+          <span className="text-xs">Cart</span>
+          <span className="absolute -top-1 -right-3 bg-red-600 text-white text-xs rounded-full px-2 py-1">0</span>
+        </a>
+      </div>
+      {isCartOpen && <Cart open={isCartOpen} setOpen={setIsCartOpen} />}
+    </div>
+  );
 };
 
 export default MobileNavbar;
